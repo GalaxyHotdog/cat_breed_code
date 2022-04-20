@@ -1,4 +1,5 @@
 import tensorflow as tf
+import tensorflow_addons as tfa
 
 def model_evaluate(model, label_names):
     AUTOTUNE = tf.data.experimental.AUTOTUNE
@@ -15,11 +16,10 @@ def model_evaluate(model, label_names):
     
     model.compile(optimizer = tf.keras.optimizers.Adam(),
              loss=tf.losses.CategoricalCrossentropy(),
-             metrics=["accuracy", "AUC"])
+             metrics=["accuracy", "AUC", tfa.metrics.F1Score(len(label_names))])
     
     val_ds = val_ds.prefetch(buffer_size=AUTOTUNE)
     result = model.evaluate(val_ds, verbose=2)
     accurancy = result[1]
-    print('accurancy: ' + str(accurancy))
         
     return result
